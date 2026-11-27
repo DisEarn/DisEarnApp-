@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: disearn-api
+    runtime: docker
+    plan: starter
+    region: frankfurt
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: DB_PATH
+        value: /app/data/disearn.db
+      - key: TRUST_PROXY
+        value: "true"
+      - key: ADMIN_EMAIL
+        value: digitalincomesystem1@gmail.com
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PAYMENT_ENCRYPTION_KEY
+        sync: false
+      - key: APP_BASE_URL
+        fromService:
+          type: web
+          name: disearn-api
+          envVarKey: RENDER_EXTERNAL_URL
+    disk:
+      name: disearn-data
+      mountPath: /app/data
+      sizeGB: 1
